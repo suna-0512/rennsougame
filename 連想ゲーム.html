@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>連想ゲーム</title>
+  <style>
+    
+  </style>
+</head>
+
+<body>
+  <h1>連想ゲーム</h1>
+	<p>お題から連想される言葉をできるだけ多く書いてください．制限時間は60秒です．</p>
+
+	<!--お題-->
+	<p>お題：<span id=theme></span></p>
+
+	<!--タイマー-->
+	<div class="timer-container">
+		<p>制限時間：<span id="timer"></span></p>
+		<button id="startBtn">START</button>
+	</div>
+
+	<!--テキストボックス-->
+	<input type="hidden" width="20px" id="answer">
+
+	<!--結果-->
+	<p id="result"></p>
+
+
+	<script>
+		//タイマー表示要素を取得
+		const timer = document.getElementById("timer");
+		//スタートボタンを取得
+		const startBtn = document.getElementById("startBtn");
+		//テキストボックス取得
+		var answer = document.getElementById ('answer')
+		//結果欄取得
+		var result = document.getElementById ('result');
+
+		//カウントの秒数
+		var count
+
+		//お題
+		var themeList = ["課題","休み","冬","今日の話題"]
+		var text = themeList[3]
+
+
+		//スタートボタンクリックで処理を行う
+		startBtn.addEventListener("click", () => {
+			
+			//ボタン押せなくする
+			startBtn.style.visibility = "hidden";
+			//テキストボックスリセット
+			answer.value = "";
+			//結果リセット
+			result.textContent = "";
+			//カウントの秒数 リセット
+			count = 60;
+
+
+			//一定時間おきに行いたい関数を宣言
+			function countDown() {
+
+				//テキストボックスを表示
+				answer = document.getElementById ('answer')
+				answer.type = "text";
+				//お題表示
+				var theme = document.getElementById ('theme')
+				theme.textContent = text;
+
+
+				if(count > 0) {
+					//countが0より大きい場合はcountを1ずつ減らす
+					count--;
+					//タイマー表示要素にcountの数値を表示
+					timer.textContent = count;
+				} 
+				else {
+					//countが0以下になったら0を表示
+					timer.textContent = 0;
+					console.log("タイマーが停止しました");
+
+					//答案取得
+					answer = document.getElementById ('answer').value;
+					splitedAnswer = answer.split("　")
+					console.log(splitedAnswer)
+
+					//空白の要素を消す
+					splitedAnswer = splitedAnswer.filter(function( item ) { return item !== '';});
+					console.log(splitedAnswer)
+
+					//答案の数を取得
+					sumNum = splitedAnswer.length
+
+					//結果表示
+					result.innerHTML ="成績: " + sumNum + " P" + "</br>" + "回答: " + answer ;
+
+					//テキストボックスを隠す
+					answer = document.getElementById ('answer')
+					answer.type = "hidden"
+
+					//ボタン再表示
+					startBtn.style.visibility = "visible";
+
+					clearInterval(timeId); //setIntervalを止める
+				}
+			}
+
+			//1000ミリ秒（1秒）ごとに、countDown関数を実行
+			var timeId = setInterval(countDown,1000);
+		});
+	</script>
+  
+</body>
+
+</html>
